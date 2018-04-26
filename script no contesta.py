@@ -4,9 +4,12 @@ import MySQLdb
 from pandasql import sqldf
 from datetime import datetime,timedelta
 import random
-
-fecha_ini='2018-04-25'
-fecha_fin='2018-04-26'
+#formato de fecha AAAA-mm-dd  ejmp 2018-04-25
+fecha_ini="''"
+fecha_fin="''"
+if(fecha_ini=="''" or fecha_fin=="''"):
+	fecha_ini="DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY),'%Y/%m/%d 07:00:00')"
+	fecha_fin="DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY),'%Y/%m/%d 21:00:00')"
 
 corriente="in ('5554','5552')"
 convenio="='5553'"
@@ -32,9 +35,9 @@ for cola,nombre_cola,comentario in zip(colas,nombre_colas,comentarios):
 		SELECT 
 		c.id_campaign,cola.name
 		FROM
-		calls c,(SELECT id,name FROM campaign where queue """+cola+""") as cola
-		WHERE c.start_time between '"""+fecha_ini+"""' and '"""+fecha_fin+"""' 
-		and c.id_campaign=cola.id GROUP BY c.id_campaign;"""
+		calls c,(SELECT id,name FROM campaign where queue {0}) as cola
+		WHERE c.start_time between {1} and {2}
+		and c.id_campaign=cola.id GROUP BY c.id_campaign;""".format(cola,fecha_ini,fecha_fin)
 	campañas=pd.read_sql(consulta, con=db)
 	print(nombre_cola)
 	print(campañas)
@@ -69,7 +72,7 @@ for cola,nombre_cola,comentario in zip(colas,nombre_colas,comentarios):
 					OR c.status = 'ShortCall'
 					OR c.status = 'NoAnswer'
 					OR c.status = 'Abandoned')
-					AND c.datetime_originate between '{1}' and '{2}'
+					AND c.datetime_originate between {1} and {2}
 					ORDER BY uniqueid ASC;""".format(id_camp,fecha_ini,fecha_fin)
 	resultado=pd.read_sql(consulta_2, con=db)
 	
