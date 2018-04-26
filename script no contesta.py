@@ -5,8 +5,8 @@ from pandasql import sqldf
 from datetime import datetime,timedelta
 import random
 
-fecha_ini='2018-04-19'
-fecha_fin='2018-04-20'
+fecha_ini='2018-04-25'
+fecha_fin='2018-04-26'
 
 corriente="in ('5554','5552')"
 convenio="='5553'"
@@ -75,8 +75,6 @@ for cola,nombre_cola,comentario in zip(colas,nombre_colas,comentarios):
 	
 	resultado.to_excel(writer, sheet_name=nombre_cola)
 	worksheet = writer.sheets[nombre_cola]
-
-	i=0
 	contador_ya_gestion=0
 	contador_subidos=0
 	for row2 in resultado.itertuples():
@@ -121,9 +119,6 @@ for cola,nombre_cola,comentario in zip(colas,nombre_colas,comentarios):
 					db2.rollback()
 		except:
 			db2.rollback()
-		if i==800:
-			break
-		i+=1
 	print("CANTIDAD DE CLIENTES QUE YA FUERON GESTIONADOS : "+str(contador_ya_gestion))
 	print("CANTIDAD DE CLIENTES QUE FUERON SUBIDOS : "+str(contador_subidos))
 
